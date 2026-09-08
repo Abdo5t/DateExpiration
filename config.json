@@ -1,0 +1,20 @@
+{
+    "products": {
+        "LHP": {
+            "duration": 5,
+            "image": "assets/LHP.png",
+            "allow_plus_one": true
+        },
+        "LBEN": {
+            "duration": 20,
+            "image": "assets/LBEN.png",
+            "allow_plus_one": false
+        },
+        "LAF": {
+            "duration": 30,
+            "image": "assets/LAF.png",
+            "allow_plus_one": false
+        }
+    },
+    "assets_folder": "assets"
+}

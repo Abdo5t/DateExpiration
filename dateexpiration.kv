@@ -1,0 +1,140 @@
+#:kivy 2.0.0
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+
+# --- Popup Definition ---
+<ConfirmPopup@Popup>:
+    title: "Confirmation"
+    size_hint: (0.8, 0.5)
+    auto_dismiss: False # Prevent closing by clicking outside
+    # Register a custom event type for confirmation
+    register_event_type: 'on_confirm'
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+
+        Label:
+            text: "Êtes-vous sûr d'ajouter un jour ?"
+            font_size: sp(20)
+
+        BoxLayout:
+            spacing: dp(20)
+            size_hint_y: None
+            height: dp(60)
+
+            Button:
+                text: "Confirmer"
+                background_color: (0.1, 0.7, 0.1, 1)
+                background_normal: ''
+                # Dispatch the custom event when the confirm button is released
+                on_release: root.dispatch('on_confirm')
+            Button:
+                text: "Annuler"
+                background_color: (0.8, 0.2, 0.2, 1)
+                background_normal: ''
+                on_release: root.dismiss() # Dismiss the popup on cancel
+
+# --- Main Layout Definition ---
+<RootLayout>:
+    orientation: 'vertical'
+    padding: dp(20)
+    spacing: dp(20)
+    # Define ids to link widgets to the Python class properties
+    product_spinner: product_spinner
+    plus_one_spinner: plus_one_spinner
+    result_label: result_label
+    product_image: product_image
+
+    # Top Layout (Logo Area)
+    BoxLayout:
+        size_hint_y: 0.3 # Takes 30% of the vertical space
+        Image:
+            source: 'assets/Co.png' # Make sure this image exists in the 'assets' folder
+            # Use norm_image_size and keep_data for Kivy 2.1+ instead of deprecated properties
+            # allow_stretch: True  # Deprecated
+            # keep_ratio: True     # Deprecated
+
+    # Bottom Layout (Controls and Results Area)
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        size_hint_y: 0.7 # Takes the remaining 70% of the vertical space
+
+        # Title Label
+        Label:
+            text: "Calcul de la date d'expiration"
+            font_size: sp(35) # Use sp for fonts
+            bold: True
+            color: (0.8, 0.9, 1, 1) # Light blue text
+            size_hint_y: None # Height determined by content
+            height: self.texture_size[1] + dp(10) # Adjust height based on text plus padding
+
+        # Product Selection Spinner
+        Spinner:
+            id: product_spinner
+            # Use root properties defined in the Python RootLayout class
+            text: root.default_spinner_text
+            values: root.product_list
+            size_hint: (None, None) # Don't stretch horizontally or vertically
+            size: (dp(280), dp(70)) # Use dp for size
+            background_normal: '' # Needed to use background_color
+            background_color: (0.2, 0.6, 0.9, 1) # Blue background
+            color: (1, 1, 1, 1) # White text
+            font_size: sp(25)
+            pos_hint: {"center_x": 0.5} # Center horizontally
+            # Call the on_produit_selected method in the RootLayout Python class when text changes
+            on_text: root.on_produit_selected(self.text)
+
+        # '+0/+1' Day Spinner
+        Spinner:
+            id: plus_one_spinner
+            text: "+0"
+            values: ("+0", "+1")
+            size_hint: (None, None)
+            size: (dp(150), dp(60))
+            background_normal: ''
+            background_color: (0.9, 0.5, 0.2, 1) # Orange background
+            color: (1, 1, 1, 1)
+            font_size: sp(22)
+            pos_hint: {"center_x": 0.5}
+            opacity: 0 # Start hidden
+            disabled: True # Start disabled
+
+        # Calculate Button
+        Button:
+            id: calc_button
+            text: "Calculer"
+            size_hint: (None, None)
+            size: (dp(280), dp(75))
+            background_normal: ''
+            background_color: (0.3, 0.8, 0.4, 1) # Green background
+            color: (1, 1, 1, 1)
+            font_size: sp(30)
+            pos_hint: {"center_x": 0.5}
+            # Call the on_calculer_button_click method in the RootLayout Python class on press
+            on_press: root.on_calculer_button_click()
+
+        # Result Display Label
+        Label:
+            id: result_label
+            text: "" # Start empty
+            font_size: sp(45)
+            color: (1, 1, 0, 1) # Yellow text for result
+            halign: "center"
+            valign: "middle"
+            size_hint_y: None # Height based on content
+            height: self.texture_size[1] + dp(20) # Adjust height based on text plus padding
+
+        # Product Image Display
+        Image:
+            id: product_image
+            source: '' # Start empty
+            size_hint: (None, None)
+            size: (dp(200), dp(200)) # Use dp for image size
+            pos_hint: {"center_x": 0.5}
+            opacity: 0 # Start hidden
+            # Use norm_image_size and keep_data for Kivy 2.1+ instead of deprecated properties
+            # allow_stretch: True # Deprecated
+            # keep_ratio: True    # Deprecated
