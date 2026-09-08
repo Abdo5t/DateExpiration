@@ -19,12 +19,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Prepare Buildozer Android SDK
+      - name: Prepare Android SDK for Buildozer
         run: |
           SDK_ROOT="$HOME/.buildozer/android/platform/android-sdk"
-          mkdir -p "$SDK_ROOT"
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK_ROOT" --licenses || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK_ROOT" "platform-tools" "platforms;android-31" "build-tools;35.0.0"
+          mkdir -p "$SDK_ROOT/tools/bin"
+
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+
+          ln -sf "$SDKMANAGER" "$SDK_ROOT/tools/bin/sdkmanager"
+
+          yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses || true
+          "$SDKMANAGER" --sdk_root="$SDK_ROOT" "platform-tools" "platforms;android-31" "build-tools;35.0.0"
 
       - name: Install Buildozer
         run: |
