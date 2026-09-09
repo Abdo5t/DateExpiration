@@ -43,10 +43,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install buildozer cython==0.29.37
 
-      - name: Clean Buildozer
-        run: |
-          rm -rf ~/.buildozer
-          rm -rf .buildozer
 
       - name: Build APK
         run: |
