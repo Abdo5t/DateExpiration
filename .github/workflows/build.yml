@@ -24,29 +24,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install buildozer cython==0.29.37
 
-      - name: Prepare Android SDK
-        run: |
-          SDK_ROOT="$HOME/.buildozer/android/platform/android-sdk"
-          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
-
-          mkdir -p "$SDK_ROOT/tools/bin"
-          ln -sf "$SDKMANAGER" "$SDK_ROOT/tools/bin/sdkmanager"
-
-          "$SDKMANAGER" --sdk_root="$SDK_ROOT" \
-            "platform-tools" \
-            "platforms;android-33" \
-            "build-tools;37.0.0"
-
-          echo "$SDK_ROOT/tools/bin" >> "$GITHUB_PATH"
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-
-          echo "ANDROIDSDK=$SDK_ROOT" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
-          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
-
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
