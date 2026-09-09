@@ -22,14 +22,34 @@ jobs:
       - name: Prepare Android SDK for Buildozer
         run: |
           SDK_ROOT="$HOME/.buildozer/android/platform/android-sdk"
-          mkdir -p "$SDK_ROOT/tools/bin"
-
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+
+          mkdir -p "$SDK_ROOT/tools/bin"
 
           ln -sf "$SDKMANAGER" "$SDK_ROOT/tools/bin/sdkmanager"
 
           yes | "$SDKMANAGER" --sdk_root="$SDK_ROOT" --licenses || true
-          "$SDKMANAGER" --sdk_root="$SDK_ROOT" "platform-tools" "platforms;android-31" "build-tools;35.0.0"
+
+          "$SDKMANAGER" --sdk_root="$SDK_ROOT" \
+            "platform-tools" \
+            "platforms;android-33" \
+            "build-tools;35.0.0"
+
+      - name: Fix Android SDK paths
+        run: |
+          SDK_ROOT="$HOME/.buildozer/android/platform/android-sdk"
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+
+          mkdir -p "$SDK_ROOT/tools/bin"
+
+          ln -sf "$SDKMANAGER" "$SDK_ROOT/tools/bin/sdkmanager"
+
+          echo "$SDK_ROOT/tools/bin" >> "$GITHUB_PATH"
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+
+          echo "ANDROIDSDK=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
 
       - name: Install Buildozer
         run: |
@@ -38,9 +58,6 @@ jobs:
 
       - name: Build APK
         run: |
-          mkdir -p "$HOME/.buildozer/android/platform/android-sdk"
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/.buildozer/android/platform/android-sdk" --licenses || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$HOME/.buildozer/android/platform/android-sdk" "platform-tools" "platforms;android-31" "build-tools;35.0.0"
           buildozer android debug
 
       - name: Upload APK
