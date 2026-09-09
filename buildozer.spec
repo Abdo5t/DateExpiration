@@ -46,6 +46,7 @@ requirements = python3,kivy
 android.api = 35
 android.minapi = 24
 android.ndk = 28c
+android.accept_sdk_license = True
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy

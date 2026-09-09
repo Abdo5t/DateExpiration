@@ -19,14 +19,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Accept Android SDK licenses
-        run: |
-          yes | sdkmanager --licenses || true
-
-      - name: Install Android Build Tools
-        run: |
-          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
-
       - name: Install Buildozer
         run: |
           python -m pip install --upgrade pip
